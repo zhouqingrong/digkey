@@ -14,6 +14,7 @@ public class UserCertServiceImpl implements UserCertService {
     //添加用户证书
     @Override
     public int addUserCert(String userCertPath, String userPublicKey) {
+        System.out.println("----------"+userCertPath+"----------"+userPublicKey);
         UserCert userCert = new UserCert();
         userCert.setUserCertPath(userCertPath);
         userCert.setUserPublicKey(userPublicKey);
