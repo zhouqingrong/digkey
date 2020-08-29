@@ -23,13 +23,13 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/userCert")
-@ResponseBody
 public class FileController {
     @Autowired
     private UserCertService userCertService;
     //   保存文件
-    @RequestMapping(value = "/upload.do",method = RequestMethod.POST)
-    public Result upload(@RequestParam MultipartFile file, @Param("userPublicKey")String userPublicKey){
+    @RequestMapping(value = "/uploadUserCert.do",method = RequestMethod.POST)
+    @ResponseBody
+    public Result uploadUserCert(@RequestParam MultipartFile file, @Param("userPublicKey")String userPublicKey){
         System.out.println(userPublicKey);
         //        设置过程数据
         JSONObject processData = new JSONObject();
@@ -51,6 +51,7 @@ public class FileController {
                 }
                 // 将上传文件保存到一个目标文件当中
                 file.transferTo(new File(path+File.separator+ filename));
+                System.out.println("----------"+filepath.getAbsolutePath());
                 userCertService.addUserCert(filepath.getAbsolutePath(),userPublicKey);
                 return ResultUtil.success(processData);
             }else{
@@ -64,8 +65,9 @@ public class FileController {
     }
 
     //提供文件下载
-    @RequestMapping(value = "/download.do", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> downLoad(@RequestParam String userPublicKey){
+    @RequestMapping(value = "/downloadUserCert.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<byte[]> downloadUserCert(@RequestParam String userPublicKey){
         try{
             // 下载文件路径
            String filePath = userCertService.findUserCertPath(userPublicKey);

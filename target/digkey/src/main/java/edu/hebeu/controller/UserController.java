@@ -43,7 +43,6 @@ public class UserController {
     public Result login(@RequestBody User params){
         try {
             System.out.println("表现层：用户登录...");
-            System.out.println(params);
             User user = userService.findUserByPhone(params.getUserPhone());
             if(user!=null){
                 if(user.getUserPwd().equals(params.getUserPwd())){
