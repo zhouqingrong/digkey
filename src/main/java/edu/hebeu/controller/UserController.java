@@ -1,6 +1,8 @@
 package edu.hebeu.controller;
 
 import edu.hebeu.po.User;
+import edu.hebeu.service.BindInfoService;
+import edu.hebeu.service.KeyService;
 import edu.hebeu.service.UserService;
 import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
@@ -18,6 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private BindInfoService bindInfoService;
+    @Autowired
+    private KeyService keyService;
+
     //注册（按手机号保持用户唯一）
     @RequestMapping(value="/register.do",method = RequestMethod.POST)
     @ResponseBody
@@ -46,19 +53,59 @@ public class UserController {
             User user = userService.findUserByPhone(params.getUserPhone());
             if(user!=null){
                 if(user.getUserPwd().equals(params.getUserPwd())){
-                    System.out.println("登录成功");
                     return ResultUtil.success(user);
                 }else {
-                    System.out.println("密码错误");
                     return ResultUtil.error(1002,"密码错误");
                 }
             }else {
-                System.out.println("查无此用户");
                 return ResultUtil.error(1001,"查无此用户");
             }
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtil.error(1003,"出现异常");
+        }
+    }
+    /**
+     * 添加绑定信息
+     * @param
+     * @return
+     */
+    @RequestMapping (value = "/addBindInfo.do")
+    @ResponseBody
+    public Result addBindInfo(@Param("userPhone")String userPhone,@Param("carVIN")String carVIN){
+        try {
+            System.out.println("表现层：添加绑定信息...");
+            return ResultUtil.success(bindInfoService.addBindInfo(userPhone,carVIN));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.error(1002,"出现异常");
+        }
+    }
+    /**
+     * 给车辆生成钥匙
+     */
+    @RequestMapping (value = "/addKey.do")
+    @ResponseBody
+    public Result addKey(@Param("carVIN") String carVIN) {
+        try {
+          return ResultUtil.success(keyService.addKey(carVIN));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.error(1003,"出现异常");
+        }
+    }
+    /**
+     * 按用户手机号查询钥匙
+     */
+    @RequestMapping (value = "/findKey.do")
+    @ResponseBody
+    public Result findKey(@Param("userPhone") String userPhone){
+        try {
+            System.out.println("表现层：接收钥匙...");
+            return ResultUtil.success(keyService.findKey(userPhone));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.error(1002,"出现异常");
         }
     }
     /**
