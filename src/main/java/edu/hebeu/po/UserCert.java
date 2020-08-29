@@ -1,5 +1,7 @@
 package edu.hebeu.po;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class UserCert {
     private int userCertId;
     private String userCertPath;

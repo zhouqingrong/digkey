@@ -1,11 +1,11 @@
 package edu.hebeu.service;
 
 import edu.hebeu.po.UserCert;
-
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserCertService {
     //添加用户证书
-    int addUser(UserCert userCert);
+    int addUserCert(String userCertPath,String userPublicKey);
     //按公钥查询用户证书
-    UserCert findUserCertByUserPhone(String userPublicKey);
+    String findUserCertPath(String userPublicKey);
 }
