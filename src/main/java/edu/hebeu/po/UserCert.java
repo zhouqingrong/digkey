@@ -9,6 +9,17 @@ public class UserCert {
     private int userCertState;
     private String userPublicKey;
 
+    @Override
+    public String toString() {
+        return "UserCert{" +
+                "userCertId=" + userCertId +
+                ", userCertPath='" + userCertPath + '\'' +
+                ", userCertUpdateTime='" + userCertUpdateTime + '\'' +
+                ", userCertState=" + userCertState +
+                ", userPublicKey='" + userPublicKey + '\'' +
+                '}';
+    }
+
     public UserCert(int userCertId, String userCertPath, String userCertUpdateTime, int userCertState, String userPublicKey) {
         this.userCertId = userCertId;
         this.userCertPath = userCertPath;
