@@ -2,6 +2,7 @@ package edu.hebeu.test;
 import static org.junit.Assert.*;
 import java.util.Map;
 
+import edu.hebeu.util.AESUtil;
 import edu.hebeu.util.DHCoder;
 import org.junit.Test;
 
@@ -52,5 +53,13 @@ public class DHCoderTest {
         String bOutput = (new String(bDecode));
         System.err.println("解密: " + bOutput);
         assertEquals(bInput, bOutput);
+    }
+
+    @Test
+    public void test1(){
+        String test = "hello world!";
+        String ret = "";
+        System.out.println(ret = AESUtil.encode(test));
+        System.out.println(AESUtil.decode(ret));
     }
 }

@@ -1,83 +1,71 @@
 package edu.hebeu.util;
 
 import org.apache.commons.codec.binary.Hex;
-
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
 public class AESUtil {
-    public final static byte[] getKey(){
+    public static Key key = null;
+
+    public static Key getKey() {
+        if (key != null) {
+            return key;
+        }
         byte[] keyBytes = null;
-        /* 生成Key */
         try {
-            KeyGenerator keyGenerator = null;
-            keyGenerator = KeyGenerator.getInstance("AES");
-            //随机生成秘钥
-            //keyGenerator.init(128);
-            //生成固定的秘钥
-            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-            random.setSeed("123456798".getBytes());
-            keyGenerator.init(128, random);
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+            keyGenerator.init(128);
             SecretKey secretKey = keyGenerator.generateKey();
             keyBytes = secretKey.getEncoded();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            return key;
         }
-        return keyBytes;
+        key = new SecretKeySpec(keyBytes, "AES");
+        return key;
     }
-//加密
-    public static String checkAES(String value){    //value是你需要加密的字符串
-        //调用生成秘钥方法
-        Key key = new SecretKeySpec(ToolUtils.getKey(), "AES");
-        //加密
-        Cipher cipher = null;
+
+    //加密
+    public static String encode(String value) {
+        Key key = getKey();
+        Cipher cipher;
         byte[] encodeResult = null;
         try {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            encodeResult = cipher.doFinal(value.getBytes());
-        } catch (NoSuchAlgorithmException e) {
+            encodeResult = cipher.doFinal(value.getBytes("utf-8"));
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
+            return null;
         }
         return Hex.encodeHexString(encodeResult);
     }
+
     //解密
-    public static String getAES(String value){           //value是需要解密的字符串
-        //调用key的生成方法
-        Key key = new SecretKeySpec(ToolUtils.getKey(), "AES");
-        //解密
+    public static String decode(String value) {
+        Key key = getKey();
         Cipher cipher = null;
         byte[] decodeResult = null;
+        String ret = null;
         try {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, key);
-            //byte[] test = value.getBytes();
-            byte[] test = Hex.decodeHex(token);
+            byte[] test = Hex.decodeHex(value);
             decodeResult = cipher.doFinal(test);
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (DecoderException e) {
+            ret = new String(decodeResult, "utf-8");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return (new String (decodeResult));
+        return ret;
+    }
+
+    public static void main(String[] args) {
+        String test = "hello world!";
+        String ret = "";
+        System.out.println(ret = AESUtil.encode(test));
+        System.out.println(AESUtil.decode(ret));
     }
 
 }
