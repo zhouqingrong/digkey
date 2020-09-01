@@ -11,15 +11,16 @@ public class CarCertServiceImpl implements CarCertService {
     @Autowired
     private CarCertDao carCertDao;
     @Override
-    public int addCarCert(String carCertPath, String publicKey) {
+    public int addCarCert(String carCertPath, String publicKey,String carVIN) {
         CarCert carCert = new CarCert();
         carCert.setCarCertPath(carCertPath);
         carCert.setCarPublicKey(publicKey);
+        carCert.setCarVIN(carVIN);
         return carCertDao.addCarCert(carCert);
     }
 
     @Override
-    public String findCarCertPath(String publicKey) {
-        return carCertDao.findCarCertPath(publicKey);
+    public String findCarCertPath(String carVIN) {
+        return carCertDao.findCarCertPath(carVIN);
     }
 }

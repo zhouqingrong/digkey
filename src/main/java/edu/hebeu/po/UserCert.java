@@ -8,6 +8,7 @@ public class UserCert {
     private String userCertUpdateTime;
     private int userCertState;
     private String userPublicKey;
+    private String userPhone;
 
     @Override
     public String toString() {
@@ -17,18 +18,27 @@ public class UserCert {
                 ", userCertUpdateTime='" + userCertUpdateTime + '\'' +
                 ", userCertState=" + userCertState +
                 ", userPublicKey='" + userPublicKey + '\'' +
+                ", userPhone='" + userPhone + '\'' +
                 '}';
     }
 
-    public UserCert(int userCertId, String userCertPath, String userCertUpdateTime, int userCertState, String userPublicKey) {
-        this.userCertId = userCertId;
+    public UserCert(String userCertPath, String userCertUpdateTime, int userCertState, String userPublicKey, String userPhone) {
         this.userCertPath = userCertPath;
         this.userCertUpdateTime = userCertUpdateTime;
         this.userCertState = userCertState;
         this.userPublicKey = userPublicKey;
+        this.userPhone = userPhone;
     }
 
     public UserCert() {
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
     public int getUserCertId() {

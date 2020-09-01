@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Select;
 
 public interface  UserCertDao {
     //添加用户证书
-    @Insert("insert into usercert(userCertPath,userCertUpdateTime,userCertState,userPublicKey) values(#{userCert.userCertPath},now(),1,#{userCert.userPublicKey})")
+    @Insert("insert into usercert(userCertPath,userCertUpdateTime,userCertState,userPublicKey,userPhone) values(#{userCert.userCertPath},now(),1,#{userCert.userPublicKey},#{userCert.userPhone})")
     int addUserCert(@Param("userCert") UserCert userCert);
     //按账号查询用户证书
     @Select("select userCertPath from usercert where 1=1 and userPhone  =  #{userPhone}")

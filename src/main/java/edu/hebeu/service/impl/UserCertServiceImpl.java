@@ -13,10 +13,11 @@ public class UserCertServiceImpl implements UserCertService {
     private UserCertDao userCertDao;
     //添加用户证书
     @Override
-    public int addUserCert(String userCertPath, String publicKey) {
+    public int addUserCert(String userCertPath, String publicKey,String userPhone) {
         UserCert userCert = new UserCert();
         userCert.setUserCertPath(userCertPath);
         userCert.setUserPublicKey(publicKey);
+        userCert.setUserPhone(userPhone);
         int flag = userCertDao.addUserCert(userCert);
         return flag;
     }

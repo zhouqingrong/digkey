@@ -32,7 +32,7 @@ public class CertManageController {
     //   保存文件
     @RequestMapping(value = "/uploadCert.do",method = RequestMethod.POST)
     @ResponseBody
-    public Result uploadUserCert(@RequestParam MultipartFile file, @Param("PublicKey")String publicKey,@Param("role")int role){
+    public Result uploadUserCert(@RequestParam MultipartFile file, @Param("publicKey")String publicKey,@Param("role")String role,@Param("flag")int flag){
         System.out.println(publicKey);
         //        设置过程数据
         JSONObject processData = new JSONObject();
@@ -55,11 +55,11 @@ public class CertManageController {
                 // 将上传文件保存到一个目标文件当中
                 file.transferTo(new File(path+File.separator+ filename));
                 System.out.println("----------"+filepath.getAbsolutePath());
-                if(role == 1){//app用户role为1
-                    if(userCertService.addUserCert(filepath.getAbsolutePath(),publicKey)==1)
+                if(flag == 1){//app用户flag为1
+                    if(userCertService.addUserCert(filepath.getAbsolutePath(),publicKey,role)==1)
                         return ResultUtil.success();
-                }else if(role == 0){
-                    if(carCertService.addCarCert(filepath.getAbsolutePath(),publicKey)==1)
+                }else if(flag == 0){
+                    if(carCertService.addCarCert(filepath.getAbsolutePath(),publicKey,role)==1)
                         return ResultUtil.success();
                 }
                 return ResultUtil.error(1001,"保存失败");
@@ -76,10 +76,16 @@ public class CertManageController {
     //提供用户证书下载
     @RequestMapping(value = "/downloadUserCert.do", method = RequestMethod.GET)
     @ResponseBody
-    public Result downloadUserCert(@RequestParam String userPhone){
+    public Result downloadUserCert(@Param("role") String role,@Param("flag")int flag){
         try{
+            String filePath =userCertService.findUserCertPath(role);//默认为用户
             // 下载文件路径
-           String filePath = userCertService.findUserCertPath(userPhone);
+            if(flag==1){//falg==1 为用户
+                filePath = userCertService.findUserCertPath(role);
+            }else if(flag == 0){
+                filePath =carCertService.findCarCertPath(role);
+            }
+
             // 获得要下载文件的File对象
             File file = new File(filePath);
             // 创建springframework的HttpHeaders对象

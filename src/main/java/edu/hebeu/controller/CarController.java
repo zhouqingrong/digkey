@@ -3,6 +3,7 @@ package edu.hebeu.controller;
 import edu.hebeu.po.Car;
 import edu.hebeu.service.CarService;
 import edu.hebeu.service.KeyService;
+import edu.hebeu.service.SecretKeyService;
 import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
 import org.apache.ibatis.annotations.Param;
@@ -20,7 +21,8 @@ public class CarController {
     private CarService carService;
     @Autowired
     private KeyService keyService;//数字钥匙
-
+    @Autowired
+    private SecretKeyService secretKeyService;//云端密钥
     /**
      * 给车辆生成钥匙
      */
@@ -46,7 +48,14 @@ public class CarController {
         try {
             System.out.println("表现层：添加车辆...");
             System.out.println(car);
-            return ResultUtil.success(carService.addCar(car));
+            int flag = carService.addCar(car);
+            if(flag==1){
+                if(keyService.addKey(car.getCarVIN())==1){
+                    return ResultUtil.success(secretKeyService.findPublicKey());
+                }
+                return ResultUtil.error(1002,"生成钥匙失败");
+            }
+            return ResultUtil.error(1001,"添加失败");
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtil.error(1003,"出现异常");
