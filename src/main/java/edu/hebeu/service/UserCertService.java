@@ -7,5 +7,5 @@ public interface UserCertService {
     //添加用户证书
     int addUserCert(String userCertPath,String userPublicKey);
     //按公钥查询用户证书
-    String findUserCertPath(String userPublicKey);
+    String findUserCertPath(String userPhone);
 }

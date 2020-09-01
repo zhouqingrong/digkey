@@ -30,7 +30,7 @@ public class KeyServiceImpl implements KeyService {
 //        //Verify original content
 //        String keyNumber = new String(decoded);
 //        System.out.println(keyNumber);
-        String keyNumber=new String();
+        String keyNumber="";
         try {
             keyNumber = MD5.EncoderByMd5(carVIN);
             System.out.println(keyNumber);

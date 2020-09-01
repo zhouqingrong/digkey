@@ -2,6 +2,7 @@ package edu.hebeu.controller;
 
 import edu.hebeu.po.Car;
 import edu.hebeu.service.CarService;
+import edu.hebeu.service.KeyService;
 import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
 import org.apache.ibatis.annotations.Param;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -16,13 +18,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class CarController {
     @Autowired
     private CarService carService;
+    @Autowired
+    private KeyService keyService;//数字钥匙
+
+    /**
+     * 给车辆生成钥匙
+     */
+    @RequestMapping (value = "/addKey.do")
+    @ResponseBody
+    public Result addKey(@Param("carVIN") String carVIN) {
+        try {
+            return ResultUtil.success(keyService.addKey(carVIN));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.error(1003,"出现异常");
+        }
+    }
 
     /**
      * 添加车辆信息
      * @param car
      * @return
      */
-    @RequestMapping (value = "/addCar.do")
+    @RequestMapping (value = "/addCar.do",method = RequestMethod.POST)
     @ResponseBody
     public Result addUser(@RequestBody Car car){
         try {
@@ -31,7 +49,7 @@ public class CarController {
             return ResultUtil.success(carService.addCar(car));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtil.error(1002,"出现异常");
+            return ResultUtil.error(1003,"出现异常");
         }
     }
     /**

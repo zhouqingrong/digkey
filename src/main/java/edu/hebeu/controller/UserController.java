@@ -3,6 +3,7 @@ package edu.hebeu.controller;
 import edu.hebeu.po.User;
 import edu.hebeu.service.BindInfoService;
 import edu.hebeu.service.KeyService;
+import edu.hebeu.service.SecretKeyService;
 import edu.hebeu.service.UserService;
 import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
@@ -23,7 +24,9 @@ public class UserController {
     @Autowired
     private BindInfoService bindInfoService;
     @Autowired
-    private KeyService keyService;
+    private KeyService keyService;//数字钥匙
+    @Autowired
+    private SecretKeyService secretKeyService;//云端密钥
 
     //注册（按手机号保持用户唯一）
     @RequestMapping(value="/register.do",method = RequestMethod.POST)
@@ -32,7 +35,7 @@ public class UserController {
         try {
             if(userService.findUserByPhone(user.getUserPhone())==null){
                 if(userService.addUser(user)==1){
-                    return ResultUtil.success();
+                    return ResultUtil.success(secretKeyService.findPublicKey());
                 }else {
                     return ResultUtil.error(1002,"注册失败");
                 }
@@ -78,22 +81,10 @@ public class UserController {
             return ResultUtil.success(bindInfoService.addBindInfo(userPhone,carVIN));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtil.error(1002,"出现异常");
-        }
-    }
-    /**
-     * 给车辆生成钥匙
-     */
-    @RequestMapping (value = "/addKey.do")
-    @ResponseBody
-    public Result addKey(@Param("carVIN") String carVIN) {
-        try {
-          return ResultUtil.success(keyService.addKey(carVIN));
-        } catch (Exception e) {
-            e.printStackTrace();
             return ResultUtil.error(1003,"出现异常");
         }
     }
+
     /**
      * 按用户手机号查询钥匙
      */
@@ -155,7 +146,7 @@ public class UserController {
             return ResultUtil.success(userService.findUserByPhone(userPhone));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtil.error(1002,"出现异常");
+            return ResultUtil.error(1003,"出现异常");
         }
     }
 

@@ -1,6 +1,7 @@
 package edu.hebeu.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import edu.hebeu.service.CarCertService;
 import edu.hebeu.service.UserCertService;
 import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
@@ -22,15 +23,17 @@ import java.io.File;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/userCert")
-public class UserCertController {
+@RequestMapping("/cert")
+public class CertManageController {
     @Autowired
     private UserCertService userCertService;
+    @Autowired
+    private CarCertService carCertService;
     //   保存文件
-    @RequestMapping(value = "/uploadUserCert.do",method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadCert.do",method = RequestMethod.POST)
     @ResponseBody
-    public Result uploadUserCert(@RequestParam MultipartFile file, @Param("userPublicKey")String userPublicKey){
-        System.out.println(userPublicKey);
+    public Result uploadUserCert(@RequestParam MultipartFile file, @Param("PublicKey")String publicKey,@Param("role")int role){
+        System.out.println(publicKey);
         //        设置过程数据
         JSONObject processData = new JSONObject();
         try{
@@ -52,9 +55,14 @@ public class UserCertController {
                 // 将上传文件保存到一个目标文件当中
                 file.transferTo(new File(path+File.separator+ filename));
                 System.out.println("----------"+filepath.getAbsolutePath());
-                int flag = userCertService.addUserCert(filepath.getAbsolutePath(),userPublicKey);
-                if(flag == 1) return ResultUtil.success();
-                return ResultUtil.error(1001,"上传失败");
+                if(role == 1){//app用户role为1
+                    if(userCertService.addUserCert(filepath.getAbsolutePath(),publicKey)==1)
+                        return ResultUtil.success();
+                }else if(role == 0){
+                    if(carCertService.addCarCert(filepath.getAbsolutePath(),publicKey)==1)
+                        return ResultUtil.success();
+                }
+                return ResultUtil.error(1001,"保存失败");
             }else{
                 return ResultUtil.error(1002,"文件为空");
             }
@@ -65,13 +73,13 @@ public class UserCertController {
         }
      }
 
-    //提供文件下载
+    //提供用户证书下载
     @RequestMapping(value = "/downloadUserCert.do", method = RequestMethod.GET)
     @ResponseBody
-    public Result downloadUserCert(@RequestParam String userPublicKey){
+    public Result downloadUserCert(@RequestParam String userPhone){
         try{
             // 下载文件路径
-           String filePath = userCertService.findUserCertPath(userPublicKey);
+           String filePath = userCertService.findUserCertPath(userPhone);
             // 获得要下载文件的File对象
             File file = new File(filePath);
             // 创建springframework的HttpHeaders对象
