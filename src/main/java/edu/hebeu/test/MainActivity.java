@@ -1,9 +1,6 @@
 package edu.hebeu.test;
 
-import edu.hebeu.util.Md5Util;
-import edu.hebeu.util.RSAUtil;
-import edu.hebeu.util.ReturnValue;
-import edu.hebeu.util._3DESUtil;
+import edu.hebeu.util.*;
 
 import java.security.KeyPair;
 import javax.crypto.BadPaddingException;
@@ -54,7 +51,7 @@ public class MainActivity {
             sign = RSAUtil.sign(hashValue.getBytes(),privateKey);                          //私钥签名获得数字签名
 
             SecretMessage secretMessage = new SecretMessage(message,sign);                //获取要发送的信息（消息+数字签名）
-            ReturnValue sendMessage = _3DESUtil._3DESencrypt(secretMessage.toString()); //对称加密，得到密文+对称密钥
+            ReturnValue sendMessage = AESUtil.encode(secretMessage.toString()); //对称加密，得到密文+对称密钥
             /*****************************************
              *
              * 获得云端数字证书，对对称密钥进行加密.

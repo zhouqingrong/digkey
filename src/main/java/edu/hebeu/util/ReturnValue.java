@@ -3,7 +3,7 @@ package edu.hebeu.util;
 import java.security.Key;
 
 public class ReturnValue {
-    ReturnValue(Key k, byte[] b) {
+    public ReturnValue(Key k, byte[] b) {
         key = k;
         bytes = b;
     }

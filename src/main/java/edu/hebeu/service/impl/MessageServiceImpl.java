@@ -5,6 +5,7 @@ import edu.hebeu.dao.CarCertDao;
 import edu.hebeu.dao.SecretKeyDao;
 import edu.hebeu.dao.UserCertDao;
 import edu.hebeu.service.MessageService;
+import edu.hebeu.util.AESUtil;
 import edu.hebeu.util.DHCoder;
 import edu.hebeu.util.RSAUtil;
 import edu.hebeu.util.ReturnValue;
@@ -32,12 +33,13 @@ public class MessageServiceImpl implements MessageService {
         //获取app端用户公钥
         String userPublicKey = userCertDao.findUserPublicKey(userPhone);
         //打开包
-       Key _3DESKey = message.getKey();
+       Key AESKey = message.getKey();
        byte[] secretMsg = message.getBytes();
         //云端私钥解密，拿到对称密钥
 
         //使用对称密钥解密 加密信息，拿到明文消息、数字签名
-
+        ReturnValue rv = new ReturnValue(AESKey,secretMsg);
+        AESUtil.decode(rv);
         //对数字签名：使用app公钥解密，拿到摘要
         RSAUtil.verify();
         //对明文消息：使用hash算法，拿到摘要
