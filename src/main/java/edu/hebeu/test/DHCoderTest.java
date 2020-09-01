@@ -55,11 +55,4 @@ public class DHCoderTest {
         assertEquals(bInput, bOutput);
     }
 
-    @Test
-    public void test1(){
-        String test = "hello world!";
-        String ret = "";
-        System.out.println(ret = AESUtil.encode(test));
-        System.out.println(AESUtil.decode(ret));
-    }
 }
