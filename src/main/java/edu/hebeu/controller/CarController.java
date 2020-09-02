@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.swing.*;
+import java.util.List;
+
 @Controller
 @RequestMapping("/car")
 public class CarController {
@@ -84,7 +87,7 @@ public class CarController {
      * @param
      * @return
      */
-    @RequestMapping (value = "/findAllCars.do")
+    @RequestMapping (value = "/findAllCars.do",produces={"application/json; charset=UTF-8"})
     @ResponseBody
     public Result findAllCars(){
         try {

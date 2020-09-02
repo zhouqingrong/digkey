@@ -30,7 +30,12 @@
 		<!-- 消息转换器 -->
 		<mvc:message-converters register-defaults="true">
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
-				<property name="supportedMediaTypes" value="application/json;charset=UTF-8"/>
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
 			</bean>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper">
@@ -38,6 +43,7 @@
                         <property name="failOnEmptyBeans" value="false"/>
                     </bean>
                 </property>
+				<property name="supportedMediaTypes" value="application/json;charset=UTF-8"/>
             </bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>

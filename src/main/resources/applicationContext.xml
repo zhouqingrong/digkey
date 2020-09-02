@@ -19,9 +19,9 @@
 	<!--配置开源连接池 Druid连接池 -->
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql:///digkey" />
+		<property name="url" value="jdbc:mysql://139.9.140.136:3307/digkey?useUnicode=true&amp;characterEncoding=utf8" />
 		<property name="username" value="root" />
-		<property name="password" value="111111" />
+		<property name="password" value="19981108" />
 	</bean>
 
 	<!--Spring整合MyBatis框架，SqlSessionFactoryBean创建工厂对象-->
