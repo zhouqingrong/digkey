@@ -4,6 +4,7 @@ import edu.hebeu.util.Message;
 
 import java.util.Arrays;
 
+//通信时的格式类型
 public class SecretMessage {
     private Message message;
     private byte[] sign;

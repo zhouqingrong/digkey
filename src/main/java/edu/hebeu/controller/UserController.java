@@ -1,10 +1,7 @@
 package edu.hebeu.controller;
 
 import edu.hebeu.po.User;
-import edu.hebeu.service.BindInfoService;
-import edu.hebeu.service.KeyService;
-import edu.hebeu.service.SecretKeyService;
-import edu.hebeu.service.UserService;
+import edu.hebeu.service.*;
 import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
 import org.apache.ibatis.annotations.Param;
@@ -27,6 +24,8 @@ public class UserController {
     private KeyService keyService;//数字钥匙
     @Autowired
     private SecretKeyService secretKeyService;//云端密钥
+    @Autowired
+    private CarService carService;
 
     //注册（按手机号保持用户唯一）
     @RequestMapping(value="/register.do",method = RequestMethod.POST)
@@ -56,6 +55,7 @@ public class UserController {
             User user = userService.findUserByPhone(params.getUserPhone());
             if(user!=null){
                 if(user.getUserPwd().equals(params.getUserPwd())){
+                    userService.updateUserState(0,params.getUserPhone());
                     return ResultUtil.success(user);
                 }else {
                     return ResultUtil.error(1002,"密码错误");
@@ -63,6 +63,64 @@ public class UserController {
             }else {
                 return ResultUtil.error(1001,"查无此用户");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.error(1003,"出现异常");
+        }
+    }
+
+    /**
+     * 登出
+     * @param userPhone
+     * @return
+     */
+    @RequestMapping(value="/logout.do" )
+    @ResponseBody
+    public Result logout(@Param("userPhone") String userPhone){
+        try {
+            System.out.println("表现层：用户登出...");
+            //查询用户是否为登录状态
+            if(userService.findUserState(userPhone)==0){
+                return ResultUtil.success(userService.updateUserState(1,userPhone));
+            }else{
+                return ResultUtil.error(1001,"用户非登录状态");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.error(1003,"出现异常");
+        }
+    }
+
+    /**
+     * 注销账号
+     * @param userPhone
+     * @return
+     */
+    @RequestMapping(value="/close.do" )
+    @ResponseBody
+    public Result close(@Param("userPhone") String userPhone){
+        try {
+            System.out.println("表现层：用户注销账号...");
+            //查询用户是否为登录状态
+            if(userService.findUserState(userPhone)==0){
+                return ResultUtil.success(userService.updateUserState(2,userPhone));
+            }else{
+                return ResultUtil.error(1001,"用户非登录状态");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.error(1003,"出现异常");
+        }
+    }
+    /**
+     * 查询拥有车辆
+     */
+    @RequestMapping (value = "/findOwnCars.do")
+    @ResponseBody
+    public Result findOwnCars(@Param("userPhone") String userPhone){
+        try {
+            System.out.println("表现层：查询拥有车辆...");
+            return ResultUtil.success(carService.findOwnCars(userPhone));
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtil.error(1003,"出现异常");
@@ -77,8 +135,13 @@ public class UserController {
     @ResponseBody
     public Result addBindInfo(@Param("userPhone")String userPhone,@Param("carVIN")String carVIN){
         try {
-            System.out.println("表现层：添加绑定信息...");
-            return ResultUtil.success(bindInfoService.addBindInfo(userPhone,carVIN));
+            if(userService.findUserState(userPhone)==0){
+                System.out.println("表现层：添加绑定信息...");
+                return ResultUtil.success(bindInfoService.addBindInfo(userPhone,carVIN));
+            }else{
+                return ResultUtil.error(1002,"用户非登录状态");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResultUtil.error(1003,"出现异常");

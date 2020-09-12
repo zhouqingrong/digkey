@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 public interface CarService {
+    //查询同一用户的车辆列表
+    List<Car> findOwnCars(String userPhone);
 //    添加车辆
     public int addCar(Car car);
     //删除信息

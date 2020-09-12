@@ -13,6 +13,12 @@ import java.util.List;
 public class CarServiceImpl implements CarService {
     @Autowired
     private CarDao carDao;
+//查询某用户的车辆列表
+    @Override
+    public List<Car> findOwnCars(String userPhone) {
+        return carDao.findOwnCars(userPhone);
+    }
+
     //添加车辆信息
     @Override
     public int addCar(Car car) {

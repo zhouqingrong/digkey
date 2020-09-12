@@ -3,6 +3,7 @@ package edu.hebeu.service.impl;
 import edu.hebeu.dao.UserDao;
 import edu.hebeu.po.User;
 import edu.hebeu.service.UserService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,17 @@ public class UserServiceImpl implements UserService {
     public int addUser(User user) {
         return userDao.addUser(user);
     }
-// 查询全部用户
+//更新用户状态
+    @Override
+    public int updateUserState(int userState, String userPhone) {
+        return userDao.updateUserState(userState,userPhone);
+    }
+    //查询用户状态
+    @Override
+    public int findUserState(String userPhone) {
+        return userDao.findUserState(userPhone);
+    }
+    // 查询全部用户
     @Override
     public List<User> findAllUsers() {
         return userDao.findAllUsers();

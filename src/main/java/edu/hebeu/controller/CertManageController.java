@@ -1,8 +1,10 @@
 package edu.hebeu.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import edu.hebeu.po.User;
 import edu.hebeu.service.CarCertService;
 import edu.hebeu.service.UserCertService;
+import edu.hebeu.service.UserService;
 import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
 import org.apache.commons.io.FileUtils;
@@ -13,10 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -29,6 +28,33 @@ public class CertManageController {
     private UserCertService userCertService;
     @Autowired
     private CarCertService carCertService;
+    @Autowired
+    private UserService userService;
+    //校验申请信息
+    @RequestMapping(value="/compInfo.do",method = RequestMethod.POST)
+    @ResponseBody
+    public Result compInfo(@RequestBody User user){
+        try {
+            User u = userService.findUserByPhone(user.getUserPhone());
+            if(u!=null){
+                if(userService.findUserState(u.getUserPhone())==0){
+                    if(u.getUserPwd().equals(user.getUserPwd()) && u.getUserName().equals(user.getUserName()) && u.getUserNumber().equals(u.getUserNumber())){
+                        return ResultUtil.success(user.getUserPublicKey());
+                    }else {
+                        return ResultUtil.error(1002,"用户信息不合法");
+                    }
+                }else{
+                    return ResultUtil.error(1004,"用户未处于正常登录状态");
+                }
+            }else {
+                return ResultUtil.error(1001,"用户尚未注册");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultUtil.error(1003,"出现异常");
+        }
+    }
+
     //   保存文件
     @RequestMapping(value = "/uploadCert.do",method = RequestMethod.POST)
     @ResponseBody

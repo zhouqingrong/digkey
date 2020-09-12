@@ -1,7 +1,7 @@
 package edu.hebeu.util;
 
 import java.security.Key;
-
+//一种通信时的格式类
 public class ReturnValue {
     public ReturnValue(Key k, byte[] b) {
         key = k;

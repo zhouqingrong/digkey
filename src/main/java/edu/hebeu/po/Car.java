@@ -6,6 +6,7 @@ public class Car {
     private String carType;
     private String carColor;
     private String carCreateDate;
+    private int userId;
 
     @Override
     public String toString() {
@@ -15,18 +16,28 @@ public class Car {
                 ", carType='" + carType + '\'' +
                 ", carColor='" + carColor + '\'' +
                 ", carCreateDate='" + carCreateDate + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 
-    public Car(int carId, String carVIN, String carType, String carColor, String carCreateDate) {
+    public Car() {
+    }
+
+    public Car(int carId, String carVIN, String carType, String carColor, String carCreateDate, int userId) {
         this.carId = carId;
         this.carVIN = carVIN;
         this.carType = carType;
         this.carColor = carColor;
         this.carCreateDate = carCreateDate;
+        this.userId = userId;
     }
 
-    public Car() {
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getCarId() {

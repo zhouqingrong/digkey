@@ -9,6 +9,10 @@ import java.util.List;
 public interface UserService {
     //添加用户
     int addUser(User user);
+    //更新用户状态
+    int updateUserState(int userState,String userPhone);
+    //查询用户状态
+    int findUserState(String userPhone);
     //查询全部用户
     public List<User> findAllUsers();
 

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 public interface CarDao {
+    //查询同一用户的车辆列表
+    @Select("select * from car where userId = (select userId from user where userPhone = #{userPhone})")
+    List<Car> findOwnCars(@Param("userPhone") String userPhone);
     //增添车辆信息
     @Insert("insert into car(carVIN,carType,carColor,carCreateDate) values(#{car.carVIN},#{car.carType},#{car.carColor},#{car.carCreateDate})")
     public int addCar(@Param("car")Car car);

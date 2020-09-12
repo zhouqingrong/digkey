@@ -4,11 +4,12 @@ public class User {
     private int userId;
     private String userName;
     private String userPwd;
-    private String userNickName;
     private String userPhone;
     private int userType;
     private String userCreateDate;
     private String userNumber;
+    private int userState;
+    private String userPublicKey;
 
     @Override
     public String toString() {
@@ -16,28 +17,45 @@ public class User {
                 "userId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", userPwd='" + userPwd + '\'' +
-                ", userNickName='" + userNickName + '\'' +
                 ", userPhone='" + userPhone + '\'' +
                 ", userType=" + userType +
                 ", userCreateDate='" + userCreateDate + '\'' +
                 ", userNumber='" + userNumber + '\'' +
+                ", userState=" + userState +
+                ", userPublicKey='" + userPublicKey + '\'' +
                 '}';
-    }
-
-    public User(int userId, String userName, String userPwd, String userNickName, String userPhone, int userType, String userCreateDate, String userNumber) {
-        this.userId = userId;
-        this.userName = userName;
-        this.userPwd = userPwd;
-        this.userNickName = userNickName;
-        this.userPhone = userPhone;
-        this.userType = userType;
-        this.userCreateDate = userCreateDate;
-        this.userNumber = userNumber;
     }
 
     public User() {
     }
 
+    public User(int userId, String userName, String userPwd, String userPhone, int userType, String userCreateDate, String userNumber, int userState, String userPublicKey) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userPwd = userPwd;
+        this.userPhone = userPhone;
+        this.userType = userType;
+        this.userCreateDate = userCreateDate;
+        this.userNumber = userNumber;
+        this.userState = userState;
+        this.userPublicKey = userPublicKey;
+    }
+
+    public String getUserPublicKey() {
+        return userPublicKey;
+    }
+
+    public void setUserPublicKey(String userPublicKey) {
+        this.userPublicKey = userPublicKey;
+    }
+
+    public int getUserState() {
+        return userState;
+    }
+
+    public void setUserState(int userState) {
+        this.userState = userState;
+    }
     public int getUserId() {
         return userId;
     }
@@ -60,14 +78,6 @@ public class User {
 
     public void setUserPwd(String userPwd) {
         this.userPwd = userPwd;
-    }
-
-    public String getUserNickName() {
-        return userNickName;
-    }
-
-    public void setUserNickName(String userNickName) {
-        this.userNickName = userNickName;
     }
 
     public String getUserPhone() {

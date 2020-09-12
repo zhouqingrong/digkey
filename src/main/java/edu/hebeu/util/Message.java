@@ -1,5 +1,5 @@
 package edu.hebeu.util;
-
+//一种通信时的格式类
 public class Message {
     private String digitalKey;//数字钥匙
     private String flag;//指令
