@@ -9,6 +9,10 @@ import java.security.NoSuchAlgorithmException;
 
 public class AESUtil {
 
+    public static Key byte2Key(byte[] b)
+    {
+        return new SecretKeySpec(b, "AES");
+    }
     public static Key getKey() {
         byte[] keyBytes = null;
         try {
@@ -40,19 +44,20 @@ public class AESUtil {
     }
 
     //解密
-    public static String decode(ReturnValue value) {
-        Key key = value.getKey();
+    public static String decode(String value,Key key) {
+        // Key key = value.getKey();
         Cipher cipher = null;
         byte[] decodeResult = null;
         String ret = null;
         try {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] test = value.getBytes();
+            byte[] test = value.getBytes("ISO8859-1");
             decodeResult = cipher.doFinal(test);
             ret = new String(decodeResult, "utf-8");
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(e.toString());
         }
         return ret;
     }

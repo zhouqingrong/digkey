@@ -2,7 +2,12 @@ package edu.hebeu.util;
 //一种通信时的格式类
 public class Message {
     private String digitalKey;//数字钥匙
-    private String flag;//指令
+    private int flag;//指令
+
+    public Message(String digitalKey, int flag) {
+        this.digitalKey = digitalKey;
+        this.flag = flag;
+    }
 
     @Override
     public String toString() {
@@ -10,11 +15,6 @@ public class Message {
                 "digitalKey='" + digitalKey + '\'' +
                 ", flag=" + flag +
                 '}';
-    }
-
-    public Message(String digitalKey, String flag) {
-        this.digitalKey = digitalKey;
-        this.flag = flag;
     }
 
     public String getDigitalKey() {
@@ -25,11 +25,11 @@ public class Message {
         this.digitalKey = digitalKey;
     }
 
-    public String getFlag() {
+    public int getFlag() {
         return flag;
     }
 
-    public void setFlag(String flag) {
+    public void setFlag(int flag) {
         this.flag = flag;
     }
 }

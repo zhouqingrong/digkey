@@ -14,7 +14,10 @@ import java.util.Base64;
 /**
  * RSA 是非对称的密码算法，密钥分公钥和私钥，公钥用来加密，私钥用于解密
  */
-// 非对称加密（没有通过测试）
+/**
+ * RSA 是非对称的密码算法，密钥分公钥和私钥，公钥用来加密，私钥用于解密
+ */
+
 public class RSAUtil {
     /**
      * 生成密钥对：密钥对中包含公钥和私钥
@@ -23,7 +26,7 @@ public class RSAUtil {
      * @throws UnsupportedEncodingException
      */
     public static KeyPair getKeyPair() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");                               // 获得RSA密钥对的生成器实例
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");                                                   // 获得RSA密钥对的生成器实例
         SecureRandom secureRandom = new SecureRandom(String.valueOf(System.currentTimeMillis()).getBytes("utf-8")); // 生成安全的随机数
         keyPairGenerator.initialize(1024, secureRandom);                                                                //  初始化1024位的密钥
         KeyPair keyPair = keyPairGenerator.generateKeyPair();                                                                   // 生成密钥对
@@ -110,6 +113,7 @@ public class RSAUtil {
      * @return
      * @throws Exception
      */
+
     public static byte[] sign(byte[] content,PrivateKey privateKey)throws Exception{
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, privateKey);
@@ -122,14 +126,14 @@ public class RSAUtil {
      * 校验数字签名
      * @param content 加密数据
      * @param publicKey 公钥
-     * @param sign 数字签名
      * @return
      * @throws Exception
      */
-    public static boolean verify(byte[] content,PublicKey publicKey,byte[] sign)throws Exception{
+    public static byte[] verify(byte[] content,PublicKey publicKey)throws Exception{
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, publicKey);
         byte[] bytes = cipher.doFinal(content);
-        return true;
+        return bytes;
     }
+
 }

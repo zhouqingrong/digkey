@@ -5,6 +5,8 @@ import edu.hebeu.po.User;
 import edu.hebeu.service.CarCertService;
 import edu.hebeu.service.UserCertService;
 import edu.hebeu.service.UserService;
+import edu.hebeu.util.FileReaderUtil;
+import edu.hebeu.util.ObjectUtil;
 import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
 import org.apache.commons.io.FileUtils;
@@ -39,7 +41,7 @@ public class CertManageController {
             if(u!=null){
                 if(userService.findUserState(u.getUserPhone())==0){
                     if(u.getUserPwd().equals(user.getUserPwd()) && u.getUserName().equals(user.getUserName()) && u.getUserNumber().equals(u.getUserNumber())){
-                        return ResultUtil.success(user.getUserPublicKey());
+                        return ResultUtil.success(new ObjectUtil(user.getUserPublicKey(),user.getUserPhone()));
                     }else {
                         return ResultUtil.error(1002,"用户信息不合法");
                     }
@@ -54,7 +56,39 @@ public class CertManageController {
             return ResultUtil.error(1003,"出现异常");
         }
     }
+//
+//    //下发证书
+//    //提供用户证书下载
+//    @RequestMapping(value = "/downloadUserCert.do", method = RequestMethod.GET)
+//    @ResponseBody
+//    public Result downloadUserCert(@Param("role") String role,@Param("flag")int flag){
+//        try{
+//            String filePath =userCertService.findUserCertPath(role);//默认为用户
+//            // 下载文件路径
+//            if(flag==1){//falg==1 为用户
+//                filePath = userCertService.findUserCertPath(role);
+//            }else if(flag == 0){
+//                filePath =carCertService.findCarCertPath(role);
+//            }
+//            // 获得要下载文件的File对象
+//            File file = new File(filePath);
+//            // 创建springframework的HttpHeaders对象
+//            HttpHeaders headers = new HttpHeaders();
+//            ResponseEntity<byte[]> responseEntity = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
+//            return ResultUtil.success(responseEntity);
+//        }
+//        catch (Exception e){
+//            return ResultUtil.error(1003,"出现异常");
+//        }
+//    }
 
+    /**
+     * @param file 要保存的文件
+     * @param publicKey 公钥
+     * @param role 唯一标识
+     * @param flag 区分标志 1用户 0车
+     * @return
+     */
     //   保存文件
     @RequestMapping(value = "/uploadCert.do",method = RequestMethod.POST)
     @ResponseBody
@@ -98,28 +132,42 @@ public class CertManageController {
             return ResultUtil.error(1003,"出现异常");
         }
      }
+    /**
+     * 保存路径到数据库
+     */
 
-    //提供用户证书下载
+
+    /**
+     * //提供用户证书下载
+     * @param role 唯一标识
+     * @param flag 1为用户 0为车
+     * @return
+     */
     @RequestMapping(value = "/downloadUserCert.do", method = RequestMethod.GET)
     @ResponseBody
     public Result downloadUserCert(@Param("role") String role,@Param("flag")int flag){
         try{
-            String filePath =userCertService.findUserCertPath(role);//默认为用户
+            String filePath = "/usr/local/tomcat/digkey/user/";
+//            String filePath =userCertService.findUserCertPath(role);//默认为用户
             // 下载文件路径
-            if(flag==1){//falg==1 为用户
-                filePath = userCertService.findUserCertPath(role);
+            if(flag==1){//flag==1 为用户
+//                filePath = userCertService.findUserCertPath(role);
+                filePath = filePath+role+"/"+role+".crt";
+                System.out.println(filePath);
             }else if(flag == 0){
                 filePath =carCertService.findCarCertPath(role);
             }
-
+            System.out.println("路径："+filePath);
             // 获得要下载文件的File对象
             File file = new File(filePath);
+            System.out.println(FileReaderUtil.readFileContent(file.getName()));
             // 创建springframework的HttpHeaders对象
             HttpHeaders headers = new HttpHeaders();
             ResponseEntity<byte[]> responseEntity = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
             return ResultUtil.success(responseEntity);
         }
         catch (Exception e){
+            e.printStackTrace();
             return ResultUtil.error(1003,"出现异常");
         }
     }
