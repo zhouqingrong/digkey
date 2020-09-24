@@ -19,7 +19,7 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
     //接收并发送消息
-    @RequestMapping(value="/message.do")
+    @RequestMapping(value="/message.do",method = RequestMethod.POST)
     @ResponseBody
     public Result receiveMessage(@Param("message") String message, @Param("k")String secretKey,@Param("userPhone")String userPhone){
         try {

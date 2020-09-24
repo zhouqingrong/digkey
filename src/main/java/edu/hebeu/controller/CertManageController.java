@@ -3,6 +3,7 @@ package edu.hebeu.controller;
 import com.alibaba.fastjson.JSONObject;
 import edu.hebeu.po.User;
 import edu.hebeu.service.CarCertService;
+import edu.hebeu.service.CertInfoService;
 import edu.hebeu.service.UserCertService;
 import edu.hebeu.service.UserService;
 import edu.hebeu.util.FileReaderUtil;
@@ -14,7 +15,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +32,8 @@ public class CertManageController {
     private CarCertService carCertService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CertInfoService certInfoService;
     //校验申请信息
     @RequestMapping(value="/compInfo.do",method = RequestMethod.POST)
     @ResponseBody
@@ -41,7 +43,8 @@ public class CertManageController {
             if(u!=null){
                 if(userService.findUserState(u.getUserPhone())==0){
                     if(u.getUserPwd().equals(user.getUserPwd()) && u.getUserName().equals(user.getUserName()) && u.getUserNumber().equals(u.getUserNumber())){
-                        return ResultUtil.success(new ObjectUtil(user.getUserPublicKey(),user.getUserPhone()));
+                        certInfoService.sendPhonePublicKey(user.getUserPhone(),user.getUserPublicKey());
+                        return ResultUtil.success();
                     }else {
                         return ResultUtil.error(1002,"用户信息不合法");
                     }
@@ -56,31 +59,6 @@ public class CertManageController {
             return ResultUtil.error(1003,"出现异常");
         }
     }
-//
-//    //下发证书
-//    //提供用户证书下载
-//    @RequestMapping(value = "/downloadUserCert.do", method = RequestMethod.GET)
-//    @ResponseBody
-//    public Result downloadUserCert(@Param("role") String role,@Param("flag")int flag){
-//        try{
-//            String filePath =userCertService.findUserCertPath(role);//默认为用户
-//            // 下载文件路径
-//            if(flag==1){//falg==1 为用户
-//                filePath = userCertService.findUserCertPath(role);
-//            }else if(flag == 0){
-//                filePath =carCertService.findCarCertPath(role);
-//            }
-//            // 获得要下载文件的File对象
-//            File file = new File(filePath);
-//            // 创建springframework的HttpHeaders对象
-//            HttpHeaders headers = new HttpHeaders();
-//            ResponseEntity<byte[]> responseEntity = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
-//            return ResultUtil.success(responseEntity);
-//        }
-//        catch (Exception e){
-//            return ResultUtil.error(1003,"出现异常");
-//        }
-//    }
 
     /**
      * @param file 要保存的文件
@@ -133,11 +111,6 @@ public class CertManageController {
         }
      }
     /**
-     * 保存路径到数据库
-     */
-
-
-    /**
      * //提供用户证书下载
      * @param role 唯一标识
      * @param flag 1为用户 0为车
@@ -147,12 +120,13 @@ public class CertManageController {
     @ResponseBody
     public Result downloadUserCert(@Param("role") String role,@Param("flag")int flag){
         try{
-            String filePath = "/usr/local/tomcat/digkey/user/";
+//          String filePath = "/usr/local/tomcat/digkey/phone/";
+            String filePath = " F:\\digkey\\phone\\";
 //            String filePath =userCertService.findUserCertPath(role);//默认为用户
             // 下载文件路径
             if(flag==1){//flag==1 为用户
 //                filePath = userCertService.findUserCertPath(role);
-                filePath = filePath+role+"/"+role+".crt";
+                filePath = filePath+role+"\\"+role+".crt";
                 System.out.println(filePath);
             }else if(flag == 0){
                 filePath =carCertService.findCarCertPath(role);

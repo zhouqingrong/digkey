@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Base64;
 
-import static edu.hebeu.test.MainActivity.*;
 
 
 @Service
@@ -34,11 +33,12 @@ public class MessageServiceImpl implements MessageService {
         //获取tsp私钥
         String tspPrivateKey = secretKeyDao.findPrivateKey();
         //获取app端用户公钥
-        String userPublicKey = userCertDao.findUserPublicKey(userPhone);
+        String userPublicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCczLrYcPeoWEnqvZXqUSLETlLHGjVXpoyAYpiLN+ENAGrziCDpZpx1oRS3lTf3GlZDr0FOJfPeJToIqelvGtr5KBYCmYzVhIYXn9a4nP6Y04QJjFeJNxnhzios27K6agn32rsghrOEpa5+HZZF4znSpQg3vOEkpX198pX/5HFK0QIDAQAB";
+//        String userPublicKey = userCertDao.findUserPublicKey(userPhone);
         //1.拿到字符数组的密文、加密后的对称密钥
 //       Key AESKey = message.getKey();
-       byte[] secretMsg = message.getBytes();
-       byte[] secretK = secretKey.getBytes();
+       byte[] secretMsg = message.getBytes("ISO-8859-1");
+       byte[] secretK = secretKey.getBytes("ISO-8859-1");
 
         //2.云端私钥解密，拿到对称密钥
         byte[] K = RSAUtil.privateDecrypt(secretK,RSAUtil.string2Privatekey(tspPrivateKey)); //获取对称密钥K
