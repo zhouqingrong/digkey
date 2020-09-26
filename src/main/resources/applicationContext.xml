@@ -21,7 +21,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<!--<property name="url" value="jdbc:mysql://139.9.140.136:3307/digkey?useUnicode=true&amp;characterEncoding=utf8 "/>-->
 		<!--<property name="url" value="jdbc:mysql:///digkey "/>-->
-		<property name="url" value="jdbc:mysql://124.71.149.25:3306/digkey?useUnicode=true&amp;characterEncoding=utf8 "/>
+		<property name="url" value="jdbc:mysql://124.71.149.25:3307/digkey?useUnicode=true&amp;characterEncoding=utf8 "/>
 		<property name="username" value="root" />
 		<!--<property name="password" value="TcG19981108" />-->
 		<property name="password" value="123456" />

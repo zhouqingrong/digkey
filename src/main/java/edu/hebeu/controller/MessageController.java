@@ -30,7 +30,8 @@ public class MessageController {
             return ResultUtil.success();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtil.error(1003,"出现异常");
+//            return ResultUtil.error(1003,"出现异常");
+            return ResultUtil.success(e);
         }
     }
 

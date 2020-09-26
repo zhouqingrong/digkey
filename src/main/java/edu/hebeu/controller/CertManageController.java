@@ -34,7 +34,7 @@ public class CertManageController {
     private UserService userService;
     @Autowired
     private CertInfoService certInfoService;
-    //校验申请信息
+    //校验手机端申请信息
     @RequestMapping(value="/compInfo.do",method = RequestMethod.POST)
     @ResponseBody
     public Result compInfo(@RequestBody User user){
@@ -56,7 +56,8 @@ public class CertManageController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtil.error(1003,"出现异常");
+            return ResultUtil.success(e);
+//            return ResultUtil.error(1003,"出现异常");
         }
     }
 
@@ -120,13 +121,13 @@ public class CertManageController {
     @ResponseBody
     public Result downloadUserCert(@Param("role") String role,@Param("flag")int flag){
         try{
-//          String filePath = "/usr/local/tomcat/digkey/phone/";
-            String filePath = " F:\\digkey\\phone\\";
+            String filePath = "/usr/local/tomcat/digkey/";
+//            String filePath = "F:\\digkey\\phone\\";
 //            String filePath =userCertService.findUserCertPath(role);//默认为用户
             // 下载文件路径
             if(flag==1){//flag==1 为用户
 //                filePath = userCertService.findUserCertPath(role);
-                filePath = filePath+role+"\\"+role+".crt";
+                filePath = filePath+"phone/"+role+"/"+role+".crt";
                 System.out.println(filePath);
             }else if(flag == 0){
                 filePath =carCertService.findCarCertPath(role);
@@ -134,7 +135,7 @@ public class CertManageController {
             System.out.println("路径："+filePath);
             // 获得要下载文件的File对象
             File file = new File(filePath);
-            System.out.println(FileReaderUtil.readFileContent(file.getName()));
+//            System.out.println(FileReaderUtil.readFileContent(file.getName()));
             // 创建springframework的HttpHeaders对象
             HttpHeaders headers = new HttpHeaders();
             ResponseEntity<byte[]> responseEntity = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
