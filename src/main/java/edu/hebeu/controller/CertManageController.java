@@ -12,6 +12,8 @@ import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,9 @@ public class CertManageController {
     private UserService userService;
     @Autowired
     private CertInfoService certInfoService;
+
+    public static final Logger log = LoggerFactory.getLogger(CertManageController.class);
+
     //校验手机端申请信息
     @RequestMapping(value="/compInfo.do",method = RequestMethod.POST)
     @ResponseBody
@@ -46,18 +51,20 @@ public class CertManageController {
                         certInfoService.sendPhonePublicKey(user.getUserPhone(),user.getUserPublicKey());
                         return ResultUtil.success();
                     }else {
+                        log.info("用户信息不合法");
                         return ResultUtil.error(1002,"用户信息不合法");
                     }
                 }else{
+                    log.info("用户未处于正常登录状态");
                     return ResultUtil.error(1004,"用户未处于正常登录状态");
                 }
             }else {
+                log.info("用户尚未注册");
                 return ResultUtil.error(1001,"用户尚未注册");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtil.success(e);
-//            return ResultUtil.error(1003,"出现异常");
+            log.error("出现异常",e);
+            return ResultUtil.error(1003,"出现异常");
         }
     }
 

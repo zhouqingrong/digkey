@@ -1,10 +1,13 @@
 package edu.hebeu.controller;
 
+import com.alibaba.fastjson.JSON;
 import edu.hebeu.po.User;
 import edu.hebeu.service.*;
 import edu.hebeu.util.Result;
 import edu.hebeu.util.ResultUtil;
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +30,8 @@ public class UserController {
     @Autowired
     private CarService carService;
 
+    public static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     //注册（按手机号保持用户唯一）
     @RequestMapping(value="/register.do",method = RequestMethod.POST)
     @ResponseBody
@@ -36,13 +41,15 @@ public class UserController {
                 if(userService.addUser(user)==1){
                     return ResultUtil.success(secretKeyService.findPublicKey());
                 }else {
+                    log.info("注册失败");
                     return ResultUtil.error(1002,"注册失败");
                 }
             }else {
+                log.info("用户已存在");
                 return ResultUtil.error(1001,"用户已存在");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("注册出现异常",e);
             return ResultUtil.error(1003,"出现异常");
         }
     }
@@ -50,21 +57,24 @@ public class UserController {
     @RequestMapping(value="/login.do" ,method = RequestMethod.POST)
     @ResponseBody
     public Result login(@RequestBody User params){
+        User user = null;
         try {
             System.out.println("表现层：用户登录...");
-            User user = userService.findUserByPhone(params.getUserPhone());
+            user = userService.findUserByPhone(params.getUserPhone());
             if(user!=null){
                 if(user.getUserPwd().equals(params.getUserPwd())){
                     userService.updateUserState(0,params.getUserPhone());
                     return ResultUtil.success(user);
                 }else {
+                    log.info("密码错误");
                     return ResultUtil.error(1002,"密码错误");
                 }
             }else {
+                log.info("查无此用户");
                 return ResultUtil.error(1001,"查无此用户");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("登录出现异常,用户：{}",JSON.toJSONString(user),e);
             return ResultUtil.error(1003,"出现异常");
         }
     }

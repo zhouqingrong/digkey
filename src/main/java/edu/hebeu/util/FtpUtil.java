@@ -148,7 +148,7 @@ public class FtpUtil {
             ftpClient = getConnect("123.57.133.103", "22", "root", "12345678Aa");
             FtpUtil.download(ftpfilepath, save_path,"1.crt","chang.crt");
            // FtpUtil.uploadFile(localfilepath,ftpfilepath,"2.crt");
-           // close();
+            close();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
